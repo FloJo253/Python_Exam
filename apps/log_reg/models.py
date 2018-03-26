@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 from django.db import models
 import re
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import bcrypt
 
 
@@ -23,11 +22,6 @@ class UserManager(models.Manager):
             errors.append("Password must be at least 8 characters")
         if postData['password'] != postData['confirm']:
             errors.append("Password and confim pw must match")
-        try:
-            if datetime.strptime(postData['birthday'], '%Y-%m-%d') > datetime.now() - relativedelta(years=13):
-                errors.append("You must be at least 13 y/o.")
-        except ValueError:
-            errors.append("You must enter a valid date")
         if len(errors) > 0:
             return (False, errors)
         
