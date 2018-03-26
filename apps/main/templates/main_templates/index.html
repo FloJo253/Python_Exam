@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Main Page</title>
+</head>
+<body>
+    <a href="/main/logout">Logout</a>
+    <br><br>
+    <h1>Welcome, {{ user.first_name }}!</h1>
+    <br>
+    <h2>Quotable Quotes</h2>
+    <h3>You Favorites:</h3>
+    {% for q in all_quotes %}
+    <form action="/quotes/fav/{{q.id}}" method="post">
+        {% csrf_token %}
+        <p>{{q.quoted_by}}:  {{q.message}}</p>
+        <p>Posted By: <a href="/quotes/users/{{q.creator.id}}">{{q.creator.first_name}}</a></p>
+        <input type="hidden" value="{{q.id}}">           
+        <input type="submit" value="Add to My List">   
+    {% endfor %}
+    </form>                        
+    <br>
+    <p>------------------------------------------------------</p>
+    <br>
+    <h2>You Favorites:</h2>
+    {% for f in my_fav %}    
+    <form action="/quotes/remove/{{f.id}}" method="post">
+        {% csrf_token %}
+        <p>{{f.quoted_by}}:  {{f.message}}</p>
+        <p>Posted By: <a href="quotes/users/{{f.creator.id}}">{{f.creator.first_name}}</a></p>
+        <input type="submit" value="Remove From My List">   
+    {% endfor %}
+    </form>
+    <br>
+    <p>------------------------------------------------------</p>
+    <br>
+    {% if messages %}
+        {% for m in messages %}
+            <p>{{ m }}</p>
+        {% endfor %}
+    {% endif %}
+<form action="/quotes/create" method="post">
+    {% csrf_token %}
+    <p>Quoted By: <input type="text" name="quoted_by"> </p>
+    <p>Message: <input type="text" name="message"> </p>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>
